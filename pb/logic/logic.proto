@@ -1,0 +1,105 @@
+syntax = "proto3";
+
+package protocol;
+
+service LogicService {
+    rpc Auth(AuthRequest) returns (AuthResponse);
+    rpc Logout(LogoutRequest) returns (LogoutResponse);
+    rpc C2CSend(C2CSendRequest) returns (C2CSendResponse);
+    rpc C2GSend(C2GSendRequest) returns (C2GSendResponse);
+    rpc C2SPull(C2SPullMessageRequest) returns (C2SPullMessageResponse);
+    rpc C2CPushAck(C2CPushResponse) returns (Response);
+    rpc C2GPushAck(C2GPushResponse) returns (Response);
+};
+
+message Response {
+    int64 ts = 1; //时间戳
+    int64 seq = 2; //序列号
+}
+
+message AuthRequest {
+    string token = 1; // 从SSO服务器返回的登录token，登录之后保存在客户端
+    string uid = 2;   // 用户ID
+    int64 ts = 3; //时间戳
+    int64 seq = 4; //序列号
+}
+message AuthResponse {
+    int32 status = 1; // 应答状态码，0表示成功，其他表示失败
+    string msg = 2; // 错误描述信息
+    int64 ts = 3; //时间戳
+    int64 seq = 4; //序列号
+}
+
+message LogoutRequest {
+    string token = 1; // 从SSO服务器返回的登录token，登录之后保存在客户端
+    string uid = 2;   // 用户ID
+    int64 ts = 3; //时间戳
+    int64 seq = 4; //序列号
+}
+message LogoutResponse {
+    int64 ts = 1; //时间戳
+    int64 seq = 2; //序列号
+}
+
+// 发送者发送消息的协议
+message C2CSendRequest {
+    string from = 1; // 发送者
+    string to = 2; // 接收者
+    string content = 3; // 消息内容
+    int64 ts = 4; //时间戳
+    int64 seq = 5; //序列号
+}
+message C2CSendResponse {
+    int64 msg_id = 1; // 落地的消息ID
+    int64 ts = 2; //时间戳
+    int64 seq = 3; //序列号
+}
+
+message C2CPushResponse {
+    int64 msg_id = 1;  // 消息id，服务器收到这个id可以去置位这个消息已读
+    int64 ts = 2; //时间戳
+    int64 seq = 3; //序列号
+}
+
+// 发送者发送群消息协议
+message C2GSendRequest {
+    string from = 1; // 发送者
+    string group = 2; // 群
+    string content = 3; // 消息内容
+    int64 ts = 4; //时间戳
+    int64 seq = 5; //序列号
+}
+
+message C2GSendResponse {
+    int64 msg_id = 1; // 落地的消息ID
+    int64 ts = 2; //时间戳
+    int64 seq = 3; //序列号
+}
+
+message C2GPushResponse {
+    int64 msg_id = 1; // 落地的消息ID
+    int64 ts = 2; //时间戳
+    int64 seq = 3; //序列号
+}
+
+message C2SPullMessageRequest {
+    string uid = 1;
+    int64 msg_id = 2;  // 拉取该消息id以后的离线消息，为0由服务器自行判断
+    int32 limit = 3; //  单次拉取离线消息的数量
+    int64 ts = 4; //时间戳
+    int64 seq = 5; //序列号
+}
+message PullMsg {
+    string from = 1;  // 发送者
+    string group = 2;  // 目的群
+    string content = 3; // 消息内容
+    int64 msg_id = 4;  // 消息编号
+    int64 send_time = 5;  // 服务器接收消息时间
+    int64 ts = 6; //时间戳
+    int64 seq = 7; //序列号
+}
+message C2SPullMessageResponse {
+    repeated PullMsg msg = 1; // 离线消息数组
+    int64 ts = 2; //时间戳
+    int64 seq = 3; //序列号
+}

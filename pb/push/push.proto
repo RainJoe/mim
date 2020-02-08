@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package push;
+
+service PushService {
+    rpc KickOut(KickOutRequest) returns (KickOutResponse);
+    rpc C2CPush(C2CPushRequest) returns (Response);
+    rpc C2GPush(C2GPushRequest) returns (Response);
+};
+
+message Response {
+    int64 ts = 1; //时间戳
+    int64 seq = 2; //序列号
+}
+
+message KickOutRequest {
+    enum Reason {
+        OTHER_LOGIN = 0; // 其他设备登录
+    }
+    int32 reason = 1; // 踢人原因
+    int64 ts = 2; //时间戳
+    int64 seq = 3; //序列号
+    string uid = 4; //用户id
+}
+message KickOutResponse {
+    int64 ts = 1; //时间戳
+    int64 seq = 2; //序列号
+}
+
+// 推送给接收者的协议
+message C2CPushRequest {
+    string from = 1;
+    string to = 2;
+    string content = 3;
+    int64 msg_id = 4;
+    int64 ts = 5; //时间戳
+    int64 seq = 6; //序列号
+}
+
+
+// 推送给其他群成员消息协议
+message C2GPushRequest {
+    string from = 1; // 发送者
+    string to = 2;
+    string group = 3; // 群
+    string content = 4; // 消息内容
+    int64 msg_id = 5; // 落地的消息ID
+    int64 ts = 6; //时间戳
+    int64 seq = 7; //序列号
+}

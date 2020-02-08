@@ -1,0 +1,19 @@
+[LogicServer]
+Addr = ":8090"
+PushServerAddr = ":8091"
+
+[redis]
+addr = "127.0.0.1:6379"
+password = ""
+db = 0
+MaxIdel = 100
+MaxActive = 4000
+IdleTimeout = 180
+[pg]
+host = "127.0.0.1"
+port = 54321
+user = "postgres"
+password = "123456"
+db = "mim"
+MaxOpenConns = 1000
+MaxIdleConns = 100

@@ -1,0 +1,6 @@
+[websocket]
+Addr = ":8080"
+ReadBufferSize = 1024
+WriteBufferSize = 1024
+LogicServerAddr = ":8090"
+PushServerAddr = ":8091"
